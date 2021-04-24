@@ -1,0 +1,424 @@
+{% extends 'index.html' %}
+{% load staticfiles %}
+{% block content %}
+    <div class="page-header header-filter"
+         style="background-image: url({% static 'img/bg7.jpg' %}); background-size: cover; background-position: top center;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-sm-8 ml-auto mr-auto">
+
+
+                    <div class="section section-comments">
+                        <div class="row">
+                            <div class="col-md-28 ml-auto mr-auto">
+                                <div class="media-area">
+
+
+                                    {% if events %}
+                                        <ul>
+                                            {% for event in events %}
+                                                <li id="undone" data-pk="{{ event.pk }}" onclick="MakeDone(this)"
+                                                    style="list-style:none">
+                                                    {% if event.done == False %}
+                                                        {#                                                    <li id="undone" data-pk="{{ event.pk }}" onclick="MakeDone(this)">#}
+                                                        <input id="makeundone{{ event.pk }}" type="checkbox"
+                                                               value="false"
+                                                               name="done">
+                                                        <button disabled
+                                                                style="color: white; background-color: inherit; border: inherit">{{ event.author }} {{ event.summary }} {{ event.date }} {{ event.done }}</button>
+                                                        <a href="{% url 'event_update' event.pk %}"
+                                                           style="color: yellow"> Update event </a>
+                                                        <a href="{% url 'event_delete' event.pk %}"
+                                                           style="color: yellow"> Delete event </a>
+                                                        {#                                                    </li>#}
+                                                    {% endif %}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                        <br>
+
+                                        <ul>
+                                            {% for event in events %}
+                                                <li id="done" data-pk="{{ event.pk }}" onclick="MakeUndone(this)"
+                                                    style="list-style:none">
+                                                    {% if event.done == True %}
+                                                        {#                                                    <li id="done" data-pk="{{ event.pk }}" onclick="MakeUndone(this)">#}
+                                                        <input id="makedone{{ event.pk }}" type="checkbox" value="true"
+                                                               checked="checked"
+                                                               name="done">
+                                                        <button disabled
+                                                                style="color: white; background-color: inherit; border: inherit">{{ event.author }} {{ event.summary }} {{ event.date }} {{ event.done }}</button>
+                                                        <a href="{% url 'event_update' event.pk %}"
+                                                           style="color: yellow"> Update event </a>
+                                                        <a href="{% url 'event_delete' event.pk %}"
+                                                           style="color: yellow"> Delete event </a>
+                                                        {#                                                    </li>#}
+                                                    {% endif %}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <p>There are no event now</p>
+                                    {% endif %}
+                                    <ul>
+                                        {% if user.is_authenticated %}
+
+                                            <div class="button-container nav-item iframe-extern">
+                                                <a href="{% url 'event_create' %}"
+                                                   class="btn  btn-rose   btn-round btn-block">
+                                                    <i class="material-icons">assignment</i> event create
+                                                </a>
+                                            </div>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        function MakeDone(element) {
+                            var x = element;
+                            var pk = $(element).data('pk')
+                            document.getElementById("done").appendChild(element)
+                            document.getElementById("makeundone" + pk).checked = true;
+                            console.log($(element).data('pk'))
+                            {#var pk = $(element).data('pk') убрать лишние ЛИ при переносе#}
+                            console.log(pk)
+
+                            $.ajax({
+                                url: '/event/' + pk + '/done/',
+                                type: 'get', // This is the default though, you don't actually need to always mention it
+                                success: function (data) {
+
+                                },
+                                failure: function (data) {
+                                    alert('Got an error dude');
+                                }
+                            });
+                        }
+
+                        function MakeUndone(element) {
+                            var x = element;
+                            var pk = $(element).data('pk')
+                            document.getElementById("undone").appendChild(element)
+                            document.getElementById("makedone" + pk).checked = false;
+                            console.log($(element).data('pk'))
+                            {#var pk = $(element).data('pk')#}
+                            console.log(pk)
+                            $.ajax({
+                                url: '/event/' + pk + '/undone/',
+                                type: 'get', // This is the default though, you don't actually need to always mention it
+
+                                success: function (data) {
+
+                                },
+                                failure: function (data) {
+                                    alert('Got an error dude');
+                                }
+                            });
+                        }
+
+                    </script>
+{#                #1#}
+{#                    <script>#}
+{#                        let i = 0;#}
+{#                        while (i < 10) {#}
+{#                            console.log(i);#}
+{#                            i++;#}
+{#                        }#}
+{#                    </script>#}
+
+{#                #2#}
+{#                    <script>#}
+{#                        let i = 1;#}
+{#                        while (i <= 20) {#}
+{#                            console.log(i);#}
+{#                            i++;#}
+{#                        }#}
+{#                    </script>#}
+{##}
+{#                #3/1#}
+{#                    <script>#}
+{#                        let i = 1;#}
+{#                        while (i <= 20) {#}
+{#                            if (i % 2 == 0)#}
+{#                            console.log(i); // show even numbers from 1 to 20 loop while#}
+{#                            i++;#}
+{#                        }#}
+{#                    </script>#}
+{##}
+{#                #3/2#}
+{#                    <script>#}
+{#                        let i = 1;#}
+{#                        while (i <= 20) {#}
+{#                            if (i % 2 != 0) // show odd numbers  from 1 to 20 loop while#}
+{#                            console.log(i)#}
+{#                            i++;#}
+{#                        }#}
+{#                    </script>#}
+{##}
+{##}
+{#                #3/3#}
+{#                    <script>#}
+{#                        for (let i = 1;i <= 20; i++)#}
+{#                         {#}
+{#                            if (i % 2 != 0) continue; // show even numbers  from 1 to 20 by loop for#}
+{#                            console.log(i)#}
+{##}
+{#                        }#}
+{#                    </script>#}
+
+
+
+
+
+
+{#                    <script>#}
+{#                        function isPalindrom(str) {#}
+{#                            str = str.toLowerCase()#}
+{#                            return str == str.split('').reverse().join('');#}
+{#                        }#}
+{##}
+{#                        let test = isPalindrom('Racecar');#}
+{#                        console.log(test)#}
+{#                    </script>#}
+
+{#                    <script>#}
+{#                        function fizzBuzz(n) {#}
+{#                            for (let i = 1; i <= n; i++) {#}
+{#                                if (i % 3 === 0 && i % 5 === 0) {#}
+{#                                    console.log('fizzbuzz')#}
+{#                                }#}
+{#                                else if (i % 3 === 0) {#}
+{#                                    console.log('fizz')#}
+{#                                }#}
+{#                                else if (i % 5 === 0) {#}
+{#                                    console.log('buzz')#}
+{#                                } else {#}
+{#                                    console.log(i)#}
+{#                                }#}
+{#                            }#}
+{#                        }#}
+{##}
+{#                        console.log(fizzBuzz(15));#}
+{#                    </script>#}
+
+                   {#return wordOne.trim() === wordTwo.trim() ? false : sort(wordOne) === sort(wordTwo);#}
+
+{#                    <script>#}
+{##}
+{#                        let sort = function (str) {#}
+{#                            return str.replace(/\s+/g, '').toLowerCase().split('').sort().join('');#}
+{#                        }#}
+{##}
+{#                        let isAnagram = function (wordOne, wordTwo) {#}
+{##}
+{#                            if (wordOne.trim() === wordTwo.trim()) {#}
+{##}
+{#                                return false;#}
+{#                            }#}
+{#                            if (sort(wordOne) === sort(wordTwo)) {#}
+{#                                return true;#}
+{#                            } else {#}
+{#                                return false;#}
+{#                            }#}
+{##}
+{#                        }#}
+{##}
+{#                        console.log(isAnagram('friend', 'Finder'));#}
+{##}
+{#                    </script>#}
+
+
+{#                    <script>#}
+{#                        function isVowels(n) {#}
+{#                            let count = 0#}
+{#                            const vowels = ['a', 'e', 'i', 'o', 'u']#}
+{#                            for (let vowel of n.toLowerCase()) {#}
+{#                                if (vowels.includes(vowel)) {#}
+{#                                    count++#}
+{#                                }#}
+{#                            }#}
+{#                            return count#}
+{#                        }#}
+{#                        console.log(isVowels('Oksana'));#}
+{##}
+{#                    </script>#}
+
+{#                   <script>#}
+{#                        function fib(n) {#}
+{#                            let one = 0, two = 1;#}
+                            {#if (n > 1) console.log(1);#}
+{#                            for (let i = 0; i < n; ++i) {#}
+{#                                let next = two;#}
+{#                                two = one + two;#}
+{#                                one = next;#}
+{#                                console.log(one);#}
+{#                            }#}
+{#                            return one;#}
+{#                        }#}
+{##}
+{#                        fib(7);#}
+{#                    </script>#}
+{#                <script>#}
+{#                    let one = prompt('введите число', 0);#}
+{#                    let two = prompt('второе число', 0);#}
+{##}
+{#                    alert(Number(one) + Number(two));#}
+{#                </script>#}
+
+{#                    <script>#}
+{#                        let num = 6.35;#}
+{##}
+{#                        alert(Math.round(num * 10) / 10);#}
+{#                    </script>#}
+
+{#                    <script>#}
+{#                        function readNumber() {#}
+{#                            let num = true;#}
+{#                            while (num) {#}
+{#                                num = prompt("введите число", " ");#}
+{#                                if (num == null || num == " ") {#}
+{#                                    return null;#}
+{#                                } else if (!isNaN(num)) {#}
+{#                                    return +num;#}
+{#                                }#}
+{#                            }#}
+{#                        }#}
+{#                        alert(readNumber());#}
+{#                    </script>#}
+
+{#                    <script>#}
+{#                        function random(min, max) {#}
+{#                            return Math.random() * (max - min) + min;#}
+{#                        }#}
+{##}
+{#                        alert(random(1, 5));#}
+{#                    </script>#}
+
+{#                    <script>#}
+{#                        function random(min, max) {#}
+{#                            return Math.random() * (max - min + 1) + min;#}
+{#                        }#}
+{##}
+{#                        alert(Math.floor(random(1, 5)));#}
+{#                    </script>#}
+{#                    <script>#}
+{#                        function ucFirst(str) {#}
+{#                            return str[0].toUpperCase() + str.slice(1);#}
+{#                        }#}
+{##}
+{#                        alert(ucFirst("вася"));#}
+{#                    </script>#}
+
+{#                    <script>#}
+                    {#    function checkSpam(str) {#}
+                    {#        str1 = str.toLowerCase();#}
+                    {#        return (str1.includes("viagra") || str1.includes("xxx"));#}
+                    {##}
+                    {#    }#}
+                    {##}
+                    {#    alert(checkSpam("xxX"));#}
+                    {#</script>#}
+
+
+{#                    <script>#}
+{#                        function truncate(str, maxlength) {#}
+{#                            str1 = str.slice(0, (maxlength - 1));#}
+{#                            return alert(str1 + "...");#}
+{#                        }#}
+{#                        truncate("Вот, что мне хотелось бы сказать на эту тему:", 20);#}
+{#                    </script>#}
+
+
+{#                    <script>#}
+{#                        function extractCurrencyValue(str) {#}
+{##}
+{#                            return +alert(str.slice(1));#}
+{#                        }#}
+{##}
+{#                        extractCurrencyValue('$120');#}
+{#                    </script>#}
+{#                #}
+{#                    <script>#}
+{#                        let music = ["Джаз", "Блюз"];#}
+{#                        alert (music)#}
+{#                        music.push("Рок-н-ролл");#}
+{#                        alert (music)#}
+{#                        music[1] = "Классика"#}
+{#                        alert (music)#}
+{#                        music.shift()#}
+{#                        alert (music)#}
+{#                        music.unshift("Рэп", "Регги");#}
+{#                        alert (music)#}
+{##}
+{##}
+{#                    </script>#}
+{#                #}
+{% comment %}
+                    <script>
+                        function readNumber() {
+                            let totNum = [];
+                            let num = true;
+                            while (num) {
+                                num = prompt("введите число", " ");
+                                if(isNaN(num)) break;
+
+                                totNum.push(num);
+
+                                console.log(totNum)
+                            }
+                            let all = 0;
+                            for (n of totNum) {
+                            all += +(n);
+                            }
+                            return all;
+
+                        }
+
+                        alert(readNumber());
+                    </script>
+{% endcomment %}
+
+                    <script>
+                            function maxSum(totNum) {
+
+                            let sum = 0;
+                            console.log("totNum", totNum);
+
+                                let totSum = [];
+                            for (let num = 0; num < totNum.length; num++) {
+
+                                sum = totNum[num] + totNum[num + 1];
+                                if(isNaN(sum)) break;
+                                console.log("totNum[num]", totNum[num]);
+                                console.log("totNum[num + 1]", totNum[num + 1]);
+
+
+                                console.log("sum", sum);
+
+
+                                totSum.push(sum);
+
+                                console.log(totSum)
+
+                            }
+                            totSum.sort(function(a, b) { return a - b; });
+                            console.log(totSum);
+                            totSum.reverse();
+
+                            console.log(totSum);
+                            return totSum[0];
+                        }
+
+                        alert(maxSum([-1, 2, 3, -9]));
+                    </script>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
