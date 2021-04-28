@@ -24,7 +24,7 @@ def validate_password_strength(value):
     """Validates that a password is as least 7 characters long and has at least
     1 digit and 1 letter.
     """
-    min_length = 7
+    min_length = 9
 
     if len(value) < min_length:
         raise ValidationError(_('Password must be at least {0} characters '
